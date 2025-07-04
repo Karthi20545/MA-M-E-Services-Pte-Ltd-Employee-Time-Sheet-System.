@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MA M&E Services Employee Time Sheet </title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+        .form-section, .table-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .delete-btn {
+            background-color: #e74c3c;
+        }
+        .edit-btn {
+            background-color: #f39c12;
+        }
+        .checkin-btn {
+            background-color: #27ae60;
+        }
+        .checkout-btn {
+            background-color: #3498db;
+        }
+        .add-employee-btn {
+            background-color: #9b59b6;
+        }
+        .search-container {
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .search-container input {
+            flex: 1;
+            min-width: 200px;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .logo {
+            width: 100px;
+            height: 100px;
+            margin-right: 20px;
+            object-fit: contain;
+        }
+        .header-text {
+            flex: 1;
+        }
+        .company-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        .print-header {
+            display: none;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: white;
+            text-align: center;
+            flex-direction: column;
+        }
+        .print-logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 15px;
+            object-fit: contain;
+        }
+        .print-header-text {
+            flex: 1;
+        }
+        .print-company-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        .print-title {
+            font-size: 18px;
+            margin: 0;
+        }
+        .status-checked-in {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        .status-checked-out {
+            color: #3498db;
+            font-weight: bold;
+        }
+        .admin-login {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+        }
+        .time-inputs {
+            display: flex;
+            gap: 10px;
+        }
+        .time-inputs input {
+            flex: 1;
+        }
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: none;
+        }
+        .employee-management {
+            margin-top: 20px;
+        }
+        .employee-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        .employee-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+        }
+        .employee-item:last-child {
+            border-bottom: none;
+        }
+        .materials-list {
+            margin-top: 10px;
+        }
+        .material-item {
+            display: flex;
+            margin-bottom: 5px;
+        }
+        .material-item input {
+            flex: 1;
+            margin-right: 5px;
+        }
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .print-section, .print-section *,
+            .print-header, .print-header * {
+                visibility: visible;
+            }
+            .print-section {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                background: white;
+                margin: 0;
+                padding: 0;
+            }
+            .print-header {
+                display: flex !important;
+                position: relative;
+                top: 0;
+                left: 0;
+                width: 100%;
+                background: white;
+                margin-bottom: 10px;
+                padding: 10px;
+                text-align: center;
+                flex-direction: column;
+            }
+            .no-print {
+                display: none !important;
+            }
+            table {
+                width: 100%;
+                font-size: 12px;
+                border-collapse: collapse;
+            }
+            th, td {
+                padding: 5px;
+                border: 1px solid #ddd;
+            }
+            .container {
+                padding: 0;
+                box-shadow: none;
+                border: none;
+            }
+            @page {
+                size: auto;
+                margin: 5mm;
+            }
+        }
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+            .logo {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+            .action-buttons {
+                flex-direction: column;
+            }
+            .time-inputs {
+                flex-direction: column;
+            }
+            th, td {
+                padding: 5px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Regular header (visible on screen) -->
+        <div class="header no-print">
+            <img src="727b5fd2-06dc-4a68-8b36-c993d0fe6782 (1).jpg" alt="Company Logo" class="logo">
+            <div class="header-text">
+                <div class="company-name">MA M&E Services Pte Ltd</div>
+                <h1>Employee Time Sheet System</h1>
+            </div>
+        </div>
+        
+        <!-- Print header (hidden on screen, visible when printing) -->
+        <div class="print-header">
+            <img src="727b5fd2-06dc-4a68-8b36-c993d0fe6782 (1).jpg" alt="Company Logo" class="print-logo">
+            <div class="print-header-text">
+                <div class="print-company-name">MA M&E Services Pte Ltd</div>
+                <h1 class="print-title">Employee Time Records</h1>
+                <p>Generated on: <span id="printDate"></span></p>
+            </div>
+        </div>
+        
+        <!-- Admin Login Section -->
+        <div id="adminLoginSection" class="admin-login no-print">
+            <h2>Admin Login</h2>
+            <div class="form-group">
+                <label for="adminPassword">Password</label>
+                <input type="password" id="adminPassword" placeholder="Enter admin password">
+            </div>
+            <button type="button" id="loginBtn" class="checkin-btn">Login</button>
+            <button type="button" id="employeeAccessBtn" class="checkout-btn">Employee Access</button>
+        </div>
+        
+        <!-- Employee Form Section -->
+        <div id="employeeFormSection" class="form-section no-print" style="display:none;">
+            <div id="successMessage" class="success-message">
+                Record submitted successfully!
+            </div>
+            <h2>Employee Time Record</h2>
+            <form id="timeSheetForm">
+                <input type="hidden" id="editRecordId" value="">
+                <div class="form-group">
+                    <label for="employeeID">Employee ID</label>
+                    <input type="text" id="employeeID" required onchange="fetchEmployeeName()">
+                </div>
+                <div class="form-group">
+                    <label for="employeeName">Employee Name</label>
+                    <input type="text" id="employeeName" required>
+                </div>
+                <div class="form-group">
+                    <label for="projectNumber">Project Number</label>
+                    <input type="text" id="projectNumber" required>
+                </div>
+                <div class="form-group">
+                    <label for="workPlace">Work Location</label>
+                    <input type="text" id="workPlace" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Time Details</label>
+                    <div class="time-inputs">
+                        <input type="time" id="inTime" required>
+                        <input type="time" id="outTime" required onchange="calculateWorkingHours()">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="workingHours">Working Hours</label>
+                    <input type="text" id="workingHours" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label for="date">Date</label>
+                    <input type="date" id="date" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="workDescription">Work Description</label>
+                    <textarea id="workDescription" rows="3" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="workMaterials">Work Materials Used</label>
+                    <div id="materialsContainer" class="materials-list">
+                        <div class="material-item">
+                            <input type="text" class="material-input" placeholder="Material name">
+                            <button type="button" class="delete-btn" onclick="removeMaterial(this)">-</button>
+                        </div>
+                    </div>
+                    <button type="button" class="checkin-btn" onclick="addMaterial()" style="margin-top: 5px;">+ Add Material</button>
+                </div>
+                
+                <div class="action-buttons">
+                    <button type="submit" id="saveBtn" class="checkin-btn">Submit Record</button>
+                    <button type="button" id="clearFormBtn">Clear Form</button>
+                    <button type="button" id="backToLoginBtn" class="delete-btn">Back to Login</button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Admin View Section -->
+        <div id="adminViewSection" class="no-print" style="display:none;">
+            <div class="table-section">
+                <h2>Time Records</h2>
+                
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="Search by name, ID or project...">
+                    <button type="button" id="searchBtn" class="checkin-btn">Search</button>
+                    <button type="button" id="resetSearchBtn">Reset</button>
+                    <button type="button" id="printBtn" class="checkout-btn">Print Records</button>
+                    <button type="button" id="logoutBtn" class="delete-btn">Logout</button>
+                    <button type="button" id="manageEmployeesBtn" class="add-employee-btn">Manage Employees</button>
+                </div>
+                
+                <div class="print-section">
+                    <table id="timeSheetTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>ID</th>
+                                <th>Project No.</th>
+                                <th>Date</th>
+                                <th>Work Location</th>
+                                <th>In Time</th>
+                                <th>Out Time</th>
+                                <th>Working Hours</th>
+                                <th>Description</th>
+                                <th>Materials Used</th>
+                                <th class="no-print">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- Records will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Employee Management Section -->
+            <div id="employeeManagementSection" class="employee-management" style="display:none;">
+                <h2>Employee Management</h2>
+                <div class="form-section">
+                    <form id="employeeForm">
+                        <div class="form-group">
+                            <label for="newEmployeeId">Employee ID</label>
+                            <input type="text" id="newEmployeeId" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newEmployeeName">Employee Name</label>
+                            <input type="text" id="newEmployeeName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newEmployeePhone">Phone Number</label>
+                            <input type="text" id="newEmployeePhone">
+                        </div>
+                        <div class="action-buttons">
+                            <button type="submit" id="addEmployeeBtn" class="checkin-btn">Add Employee</button>
+                            <button type="button" id="cancelEmployeeBtn">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <h3>Employee List</h3>
+                <div class="employee-list" id="employeeListContainer">
+                    <!-- Employee list will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const adminLoginSection = document.getElementById('adminLoginSection');
+        const employeeFormSection = document.getElementById('employeeFormSection');
+        const adminViewSection = document.getElementById('adminViewSection');
+        const timeSheetForm = document.getElementById('timeSheetForm');
+        const editRecordId = document.getElementById('editRecordId');
+        const employeeName = document.getElementById('employeeName');
+        const employeeID = document.getElementById('employeeID');
+        const projectNumber = document.getElementById('projectNumber');
+        const workPlace = document.getElementById('workPlace');
+        const inTime = document.getElementById('inTime');
+        const outTime = document.getElementById('outTime');
+        const workingHours = document.getElementById('workingHours');
+        const date = document.getElementById('date');
+        const workDescription = document.getElementById('workDescription');
+        const saveBtn = document.getElementById('saveBtn');
+        const clearFormBtn = document.getElementById('clearFormBtn');
+        const backToLoginBtn = document.getElementById('backToLoginBtn');
+        const tableBody = document.getElementById('tableBody');
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const resetSearchBtn = document.getElementById('resetSearchBtn');
+        const printBtn = document.getElementById('printBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const adminPassword = document.getElementById('adminPassword');
+        const loginBtn = document.getElementById('loginBtn');
+        const employeeAccessBtn = document.getElementById('employeeAccessBtn');
+        const printDate = document.getElementById('printDate');
+        const successMessage = document.getElementById('successMessage');
+        const manageEmployeesBtn = document.getElementById('manageEmployeesBtn');
+        const employeeManagementSection = document.getElementById('employeeManagementSection');
+        const employeeForm = document.getElementById('employeeForm');
+        const newEmployeeId = document.getElementById('newEmployeeId');
+        const newEmployeeName = document.getElementById('newEmployeeName');
+        const newEmployeePhone = document.getElementById('newEmployeePhone');
+        const addEmployeeBtn = document.getElementById('addEmployeeBtn');
+        const cancelEmployeeBtn = document.getElementById('cancelEmployeeBtn');
+        const employeeListContainer = document.getElementById('employeeListContainer');
+        const materialsContainer = document.getElementById('materialsContainer');
+
+        // Global variables
+        let allRecords = JSON.parse(localStorage.getItem('timeSheetRecords')) || [];
+        let allEmployees = JSON.parse(localStorage.getItem('employeeList')) || [];
+        let isAdminLoggedIn = false;
+        const ADMIN_PASSWORD = "Raja123"; // Change this to your secure password
+        const OWNER_EMAIL = "mamneservices@gmail.com"; // Owner's email for email notifications
+
+        // Initialize the application
+        function init() {
+            // Set default date to today
+            const today = new Date().toISOString().split('T')[0];
+            date.value = today;
+            
+            setupEventListeners();
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Event listeners for form
+            timeSheetForm.addEventListener('submit', saveRecord);
+            clearFormBtn.addEventListener('click', clearForm);
+            backToLoginBtn.addEventListener('click', () => {
+                employeeFormSection.style.display = 'none';
+                adminLoginSection.style.display = 'block';
+                clearForm();
+            });
+            
+            // Event listeners for table operations
+            searchBtn.addEventListener('click', searchRecords);
+            resetSearchBtn.addEventListener('click', resetSearch);
+            printBtn.addEventListener('click', printRecords);
+            logoutBtn.addEventListener('click', handleLogout);
+            
+            // Login events
+            loginBtn.addEventListener('click', handleLogin);
+            employeeAccessBtn.addEventListener('click', handleEmployeeAccess);
+            
+            // Employee management events
+            manageEmployeesBtn.addEventListener('click', toggleEmployeeManagement);
+            employeeForm.addEventListener('submit', addEmployee);
+            cancelEmployeeBtn.addEventListener('click', toggleEmployeeManagement);
+        }
+
+        // Add material input field
+        function addMaterial() {
+            const div = document.createElement('div');
+            div.className = 'material-item';
+            div.innerHTML = `
+                <input type="text" class="material-input" placeholder="Material name">
+                <button type="button" class="delete-btn" onclick="removeMaterial(this)">-</button>
+            `;
+            materialsContainer.appendChild(div);
+        }
+
+        // Remove material input field
+        function removeMaterial(button) {
+            if (materialsContainer.children.length > 1) {
+                button.parentElement.remove();
+            }
+        }
+
+        // Get all materials from form
+        function getMaterials() {
+            const inputs = materialsContainer.querySelectorAll('.material-input');
+            const materials = [];
+            inputs.forEach(input => {
+                if (input.value.trim()) {
+                    materials.push(input.value.trim());
+                }
+            });
+            return materials;
+        }
+
+        // Handle admin login
+        function handleLogin() {
+            if (adminPassword.value === ADMIN_PASSWORD) {
+                isAdminLoggedIn = true;
+                adminLoginSection.style.display = 'none';
+                adminViewSection.style.display = 'block';
+                adminPassword.value = '';
+                loadRecords();
+            } else {
+                alert('Incorrect password');
+            }
+        }
+
+        // Handle employee access
+        function handleEmployeeAccess() {
+            adminLoginSection.style.display = 'none';
+            employeeFormSection.style.display = 'block';
+            clearForm();
+        }
+
+        // Handle admin logout
+        function handleLogout() {
+            isAdminLoggedIn = false;
+            adminViewSection.style.display = 'none';
+            employeeManagementSection.style.display = 'none';
+            adminLoginSection.style.display = 'block';
+        }
+
+        // Toggle employee management section
+        function toggleEmployeeManagement() {
+            if (employeeManagementSection.style.display === 'none') {
+                employeeManagementSection.style.display = 'block';
+                loadEmployeeList();
+            } else {
+                employeeManagementSection.style.display = 'none';
+                employeeForm.reset();
+            }
+        }
+
+        // Calculate working hours
+        function calculateWorkingHours() {
+            if (!inTime.value || !outTime.value) return;
+            
+            const [inHours, inMinutes] = inTime.value.split(':').map(Number);
+            const [outHours, outMinutes] = outTime.value.split(':').map(Number);
+            
+            let totalHours = outHours - inHours;
+            let totalMinutes = outMinutes - inMinutes;
+            
+            if (totalMinutes < 0) {
+                totalHours--;
+                totalMinutes += 60;
+            }
+            
+            workingHours.value = `${totalHours} hours ${totalMinutes} minutes`;
+        }
+
+        // Fetch employee name when ID is entered
+        function fetchEmployeeName() {
+            const id = employeeID.value.trim();
+            if (!id) return;
+            
+            const employee = allEmployees.find(emp => emp.id === id);
+            if (employee) {
+                employeeName.value = employee.name;
+            } else {
+                employeeName.value = '';
+            }
+        }
+
+        // Save record
+        function saveRecord(e) {
+            e.preventDefault();
+            
+            const materials = getMaterials();
+            const record = {
+                id: Date.now().toString(),
+                name: employeeName.value.trim(),
+                employeeID: employeeID.value.trim(),
+                projectNumber: projectNumber.value.trim(),
+                workPlace: workPlace.value.trim(),
+                inTime: inTime.value,
+                outTime: outTime.value,
+                workingHours: workingHours.value,
+                date: date.value,
+                description: workDescription.value.trim(),
+                materials: materials,
+                status: 'Submitted',
+                timestamp: new Date().toISOString()
+            };
+            
+            // Add new record
+            allRecords.unshift(record);
+            localStorage.setItem('timeSheetRecords', JSON.stringify(allRecords));
+            
+            // Send email notification to owner
+            sendEmailNotification(record);
+            
+            // Show success message
+            successMessage.style.display = 'block';
+            
+            // Clear form
+            clearForm();
+            
+            // Hide success message after 3 seconds
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+            }, 3000);
+        }
+
+        // Send email notification for a specific record
+        function sendEmailNotification(record) {
+            const subject = `MA M&E Services Pte Ltd Time Record Submitted: ${record.name} - ${record.date}`;
+            const emailBody = `
+             MA M&E Services Pte Ltd Employee Time Record Details :
+                
+                Name: ${record.name}
+                Employee ID: ${record.employeeID}
+                Project Number: ${record.projectNumber}
+                Date: ${record.date}
+                Work Location: ${record.workPlace}
+                In Time: ${record.inTime}
+                Out Time: ${record.outTime}
+                Working Hours: ${record.workingHours}
+                Description: ${record.description}
+                Materials Used: ${record.materials ? record.materials.join(', ') : 'None'}
+                
+                This is an automated notification from MA M&E Services Time Sheet System.
+            `;
+            
+            const mailtoLink = `mailto:${OWNER_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
+            window.open(mailtoLink, '_blank');
+        }
+
+        // Load records from localStorage
+        function loadRecords(filteredRecords = null) {
+            const recordsToDisplay = filteredRecords || allRecords;
+            tableBody.innerHTML = '';
+            
+            if (recordsToDisplay.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="11" style="text-align:center;">No records found</td></tr>';
+                return;
+            }
+            
+            recordsToDisplay.forEach((record) => {
+                const row = document.createElement('tr');
+                row.dataset.id = record.id;
+                
+                // Format date
+                const dateObj = new Date(record.date);
+                const dateStr = dateObj.toLocaleDateString();
+                
+                // Format materials
+                const materials = record.materials ? record.materials.join(', ') : '-';
+                
+                row.innerHTML = `
+                    <td>${record.name}</td>
+                    <td>${record.employeeID}</td>
+                    <td>${record.projectNumber}</td>
+                    <td>${dateStr}</td>
+                    <td>${record.workPlace || '-'}</td>
+                    <td>${record.inTime || '-'}</td>
+                    <td>${record.outTime || '-'}</td>
+                    <td>${record.workingHours || '-'}</td>
+                    <td>${record.description || '-'}</td>
+                    <td>${materials}</td>
+                    <td class="no-print action-buttons">
+                        <button class="delete-btn" onclick="deleteRecord('${record.id}')">Delete</button>
+                    </td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Load employee list
+        function loadEmployeeList() {
+            employeeListContainer.innerHTML = '';
+            
+            if (allEmployees.length === 0) {
+                employeeListContainer.innerHTML = '<p>No employees added yet.</p>';
+                return;
+            }
+            
+            allEmployees.forEach((employee, index) => {
+                const employeeItem = document.createElement('div');
+                employeeItem.className = 'employee-item';
+                employeeItem.innerHTML = `
+                    <span>${employee.id} - ${employee.name} ${employee.phone ? `(${employee.phone})` : ''}</span>
+                    <button class="delete-btn" onclick="deleteEmployee(${index})">Delete</button>
+                `;
+                employeeListContainer.appendChild(employeeItem);
+            });
+        }
+
+        // Add new employee
+        function addEmployee(e) {
+            e.preventDefault();
+            
+            const employee = {
+                id: newEmployeeId.value.trim(),
+                name: newEmployeeName.value.trim(),
+                phone: newEmployeePhone.value.trim()
+            };
+            
+            // Check if employee ID already exists
+            if (allEmployees.some(emp => emp.id === employee.id)) {
+                alert('Employee ID already exists');
+                return;
+            }
+            
+            allEmployees.push(employee);
+            localStorage.setItem('employeeList', JSON.stringify(allEmployees));
+            
+            // Reset form and reload list
+            employeeForm.reset();
+            loadEmployeeList();
+        }
+
+        // Delete employee
+        function deleteEmployee(index) {
+            if (confirm('Are you sure you want to delete this employee?')) {
+                allEmployees.splice(index, 1);
+                localStorage.setItem('employeeList', JSON.stringify(allEmployees));
+                loadEmployeeList();
+            }
+        }
+
+        // Delete record
+        function deleteRecord(id) {
+            if (confirm('Are you sure you want to delete this record?')) {
+                allRecords = allRecords.filter(record => record.id !== id);
+                localStorage.setItem('timeSheetRecords', JSON.stringify(allRecords));
+                loadRecords();
+            }
+        }
+
+        // Clear form
+        function clearForm() {
+            timeSheetForm.reset();
+            
+            // Set default date to today
+            const today = new Date().toISOString().split('T')[0];
+            date.value = today;
+            
+            workingHours.value = '';
+            
+            // Reset materials (keep one empty field)
+            materialsContainer.innerHTML = `
+                <div class="material-item">
+                    <input type="text" class="material-input" placeholder="Material name">
+                    <button type="button" class="delete-btn" onclick="removeMaterial(this)">-</button>
+                </div>
+            `;
+        }
+
+        // Search records
+        function searchRecords() {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            if (!searchTerm) {
+                loadRecords();
+                return;
+            }
+            
+            const filtered = allRecords.filter(record => 
+                record.name.toLowerCase().includes(searchTerm) ||
+                record.employeeID.toLowerCase().includes(searchTerm) ||
+                record.projectNumber.toLowerCase().includes(searchTerm) ||
+                (record.workPlace && record.workPlace.toLowerCase().includes(searchTerm)) ||
+                record.description.toLowerCase().includes(searchTerm) ||
+                (record.materials && record.materials.some(m => m.toLowerCase().includes(searchTerm))) ||
+                record.date.toLowerCase().includes(searchTerm)
+            );
+            
+            loadRecords(filtered);
+        }
+
+        // Reset search
+        function resetSearch() {
+            searchInput.value = '';
+            loadRecords();
+        }
+
+        // Print records - improved for mobile and desktop
+        function printRecords() {
+            if (allRecords.length === 0) {
+                alert('No records to print');
+                return;
+            }
+            
+            // Update print date
+            const now = new Date();
+            printDate.textContent = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
+            
+            // Create a new window for printing
+            const printWindow = window.open('', '_blank');
+            
+            // HTML content for printing
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Employee Time Records</title>
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <style>
+                            body { 
+                                font-family: Arial, sans-serif; 
+                                margin: 0; 
+                                padding: 10px; 
+                                font-size: 12px;
+                                color: #000;
+                            }
+                            .header { 
+                                display: flex; 
+                                flex-direction: column;
+                                align-items: center; 
+                                margin-bottom: 10px;
+                                padding-bottom: 10px;
+                                border-bottom: 1px solid #ddd;
+                                text-align: center;
+                            }
+                            .logo { 
+                                width: 60px; 
+                                height: 60px; 
+                                margin-bottom: 10px;
+                                object-fit: contain;
+                            }
+                            .company-name { 
+                                font-size: 16px; 
+                                font-weight: bold; 
+                                margin-bottom: 2px; 
+                            }
+                            .print-title {
+                                font-size: 14px;
+                                margin: 0;
+                            }
+                            table {
+                                width: 100%;
+                                border-collapse: collapse;
+                                margin-top: 10px;
+                                font-size: 10px;
+                            }
+                            th, td {
+                                border: 1px solid #ddd;
+                                padding: 5px;
+                                text-align: left;
+                            }
+                            th {
+                                background-color: #f2f2f2;
+                                font-weight: bold;
+                            }
+                            .description-cell {
+                                max-width: 200px;
+                                word-wrap: break-word;
+                            }
+                            .no-print {
+                                display: none;
+                            }
+                            @page {
+                                size: auto;
+                                margin: 5mm;
+                            }
+                            @media print {
+                                body { 
+                                    padding: 0;
+                                    margin: 0;
+                                }
+                                .header {
+                                    margin-bottom: 5px;
+                                    padding-bottom: 5px;
+                                }
+                                table {
+                                    page-break-inside: auto;
+                                }
+                                tr {
+                                    page-break-inside: avoid;
+                                    page-break-after: auto;
+                                }
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="header">
+                            <img src="727b5fd2-06dc-4a68-8b36-c993d0fe6782 (1).jpg" alt="Company Logo" class="logo">
+                            <div>
+                                <div class="company-name">MA M&E Services Pte Ltd</div>
+                                <h1 class="print-title">Employee Time Records</h1>
+                                <p style="margin:2px 0;font-size:10px;">Generated on: ${now.toLocaleDateString()} ${now.toLocaleTimeString()}</p>
+                            </div>
+                        </div>
+                        
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>ID</th>
+                                    <th>Project</th>
+                                    <th>Date</th>
+                                    <th>Location</th>
+                                    <th>In</th>
+                                    <th>Out</th>
+                                    <th>Hours</th>
+                                    <th>Description</th>
+                                    <th>Materials</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${generatePrintTableRows()}
+                            </tbody>
+                        </table>
+                        
+                        <script>
+                            // Trigger print after content loads
+                            setTimeout(() => {
+                                window.print();
+                                window.close();
+                            }, 200);
+                        <\/script>
+                    </body>
+                </html>
+            `);
+            
+            printWindow.document.close();
+        }
+
+        // Generate table rows for print view with work description
+        function generatePrintTableRows() {
+            return allRecords.map(record => {
+                const dateObj = new Date(record.date);
+                const dateStr = dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                const materials = record.materials ? record.materials.join(', ') : '-';
+                const description = record.description || '-';
+                
+                return `
+                    <tr>
+                        <td>${record.name}</td>
+                        <td>${record.employeeID}</td>
+                        <td>${record.projectNumber}</td>
+                        <td>${dateStr}</td>
+                        <td>${record.workPlace || '-'}</td>
+                        <td>${record.inTime || '-'}</td>
+                        <td>${record.outTime || '-'}</td>
+                        <td>${record.workingHours || '-'}</td>
+                        <td class="description-cell">${description}</td>
+                        <td>${materials}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+
+        // Make functions available globally for inline event handlers
+        window.deleteRecord = deleteRecord;
+        window.deleteEmployee = deleteEmployee;
+        window.removeMaterial = removeMaterial;
+        window.addMaterial = addMaterial;
+    </script>
+</body>
+</html>
+   
